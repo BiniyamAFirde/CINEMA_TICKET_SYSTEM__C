@@ -1,21 +1,29 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CinemaTicketSystem.Models;
+using CinemaTicketSystem.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaTicketSystem.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var movies = await _context.Movies
+            .OrderByDescending(m => m.ReleaseDate)
+            .Take(6)
+            .ToListAsync();
+        return View(movies);
     }
 
     public IActionResult Privacy()

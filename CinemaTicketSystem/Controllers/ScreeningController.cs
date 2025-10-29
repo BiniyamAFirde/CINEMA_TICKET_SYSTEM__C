@@ -18,12 +18,18 @@ namespace CinemaTicketSystem.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? movieId)
         {
-            var screenings = await _context.Screenings
+            var screeningsQuery = _context.Screenings
                 .Include(s => s.Movie)
-                .OrderBy(s => s.ScreeningDateTime)
-                .ToListAsync();
+                .OrderBy(s => s.ScreeningDateTime).AsQueryable();
+
+            if (movieId.HasValue)
+            {
+                screeningsQuery = screeningsQuery.Where(s => s.MovieId == movieId.Value);
+            }
+
+            var screenings = await screeningsQuery.ToListAsync();
 
             return View(screenings);
         }
