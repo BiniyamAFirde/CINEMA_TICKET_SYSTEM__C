@@ -1,0 +1,99 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/packages
+
+# Tooling
+/tools
+
+# Project files
+/project.lock.json
+/project.fragment.lock.json
+
+# Roslyn
+*.roslynator.config
+*.ruleset
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015 cache/options directory
+.vs/
+# Visual Studio 2017 cache/options directory
+.vs
+# Rider
+.idea
+
+# Visual Studio Code
+.vscode
+
+# Test results
+/TestResults
+/coverage
+*.codecov.yml
+*.lcov
+*.clover
+*.cobertura.xml
+*.coveralls.yml
+*.coverlet.json
+*.gcov
+*.opencover.xml
+*.sonar-project.properties
+*.sonarqube.xml
+*.trx
+
+# Dotnet
+/dotnet
+/out
+
+# Dotnet-test
+/test-results
+
+# Dotnet-coverage
+/coverage.cobertura.xml
+/coverage.xml
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Secrets
+secrets.json
+appsettings.Development.json
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Rider
+*.sln.iml
+
+# Other
+*.swp
+*.bak
+*.tmp

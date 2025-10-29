@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div style="background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); color: white; padding: 100px 0; text-align: center;">
+    <div class="container">
+        <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 20px;">🎬 Welcome to CinemaHub</h1>
+        <p style="font-size: 1.3rem; margin-bottom: 30px;">Book your favorite movies online in just a few clicks</p>
+        <div>
+            @if (User?.Identity?.IsAuthenticated == true)
+            {
+                <a class="btn btn-danger btn-lg" asp-controller="Screening" asp-action="Index">Browse Screenings</a>
+            }
+            else
+            {
+                <a class="btn btn-danger btn-lg me-2" asp-controller="Account" asp-action="Login">Login</a>
+                <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Register">Register</a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 2rem;">🎟️</h5>
+                    <h6 class="card-subtitle">Easy Booking</h6>
+                    <p class="card-text">Book tickets in seconds with our user-friendly interface.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 2rem;">🎬</h5>
+                    <h6 class="card-subtitle">Latest Movies</h6>
+                    <p class="card-text">Access to the latest blockbuster movies and screenings.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
