@@ -97,3 +97,4 @@ appsettings.Development.json
 *.swp
 *.bak
 *.tmp
+.DS_Store
