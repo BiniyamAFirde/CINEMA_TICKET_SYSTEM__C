@@ -13,6 +13,7 @@ namespace CinemaTicketSystem.Data
         }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Screening> Screenings { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Seat> Seats { get; set; }
@@ -28,14 +29,15 @@ namespace CinemaTicketSystem.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure decimal precision for prices
-            modelBuilder.Entity<Movie>()
-                .Property(m => m.Price)
-                .HasColumnType("decimal(18,2)");
-
             modelBuilder.Entity<Booking>()
                 .Property(b => b.TotalPrice)
                 .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Screening)
+                .WithMany()
+                .HasForeignKey(b => b.ScreeningId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Seat>()
                 .HasOne(s => s.Booking)
@@ -76,6 +78,38 @@ namespace CinemaTicketSystem.Data
                 {
                     RoleId = "admin-role-id",
                     UserId = "admin-user-id"
+                }
+            );
+
+            // Seed Cinemas (fixed list as per requirements)
+            modelBuilder.Entity<Cinema>().HasData(
+                new Cinema
+                {
+                    Id = 1,
+                    Name = "Grand Cinema Hall",
+                    Rows = 10,
+                    SeatsPerRow = 15
+                },
+                new Cinema
+                {
+                    Id = 2,
+                    Name = "Cozy Theater",
+                    Rows = 8,
+                    SeatsPerRow = 12
+                },
+                new Cinema
+                {
+                    Id = 3,
+                    Name = "Premium Auditorium",
+                    Rows = 12,
+                    SeatsPerRow = 20
+                },
+                new Cinema
+                {
+                    Id = 4,
+                    Name = "Small Screening Room",
+                    Rows = 6,
+                    SeatsPerRow = 10
                 }
             );
         }

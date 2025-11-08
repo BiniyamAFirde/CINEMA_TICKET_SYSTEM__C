@@ -19,7 +19,7 @@ namespace CinemaTicketSystem.Models
         public int ScreeningId { get; set; }
 
         [ForeignKey("ScreeningId")]
-        public Screening Screening { get; set; }
+        public Screening? Screening { get; set; }
 
         [Required]
         public int Row { get; set; }
@@ -33,9 +33,9 @@ namespace CinemaTicketSystem.Models
         public int? BookingId { get; set; }
 
         [ForeignKey("BookingId")]
-        public Booking Booking { get; set; }
+        public Booking? Booking { get; set; }
 
         [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
     }
 }

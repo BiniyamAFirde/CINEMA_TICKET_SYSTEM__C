@@ -115,5 +115,16 @@ namespace CinemaTicketSystem.Controllers
         {
             return _context.Movies.Any(e => e.Id == id);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return View(movie);
+        }
     }
 }

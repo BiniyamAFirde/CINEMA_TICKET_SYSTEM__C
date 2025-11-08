@@ -1,27 +1,25 @@
-@using CinemaTicketSystem.ViewModels
-@model Screening
+@model CinemaTicketSystem.Models.ApplicationUser
 
 @{
-    ViewData["Title"] = "Delete Screening";
+    ViewData["Title"] = "Delete User";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card shadow-sm border-danger">
             <div class="card-header bg-danger text-white">
-                <h4 class="mb-0">Delete Screening</h4>
+                <h4 class="mb-0">Delete User</h4>
             </div>
             <div class="card-body p-4">
                 <div class="alert alert-warning">
-                    <strong>Are you sure?</strong> This action cannot be undone.
+                    <strong>Are you sure?</strong> This action cannot be undone. All bookings associated with this user will also be affected.
                 </div>
 
                 <p>
-                    <strong>Movie:</strong> @Model.Movie?.Title<br />
-                    <strong>Cinema:</strong> @Model.Cinema?.Name<br />
-                    <strong>Layout:</strong> @Model.Cinema?.Rows rows x @Model.Cinema?.SeatsPerRow seats<br />
-                    <strong>Date & Time:</strong> @Model.ScreeningDateTime.ToString("g")<br />
-                    <strong>Total Seats:</strong> @Model.Cinema?.TotalSeats
+                    <strong>Name:</strong> @Model.FirstName @Model.LastName<br />
+                    <strong>Email:</strong> @Model.Email<br />
+                    <strong>Phone:</strong> @(Model.PhoneNumber ?? "N/A")<br />
+                    <strong>Date of Birth:</strong> @(Model.DateOfBirth?.ToString("yyyy-MM-dd") ?? "N/A")
                 </p>
 
                 <form method="post" asp-action="Delete" novalidate style="display:inline;">

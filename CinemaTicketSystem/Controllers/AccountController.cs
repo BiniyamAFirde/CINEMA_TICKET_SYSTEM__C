@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CinemaTicketSystem.Models;
 using CinemaTicketSystem.ViewModels;
+using CinemaTicketSystem.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaTicketSystem.Controllers
 {
@@ -9,12 +11,14 @@ namespace CinemaTicketSystem.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
 
         public AccountController(UserManager<ApplicationUser> userManager, 
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
@@ -142,13 +146,16 @@ namespace CinemaTicketSystem.Controllers
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
         user.PhoneNumber = model.PhoneNumber;
-        user.DateOfBirth = model.DateOfBirth; // Both are DateTime? so this works
+        user.DateOfBirth = model.DateOfBirth;
 
         var result = await _userManager.UpdateAsync(user);
 
         if (result.Succeeded)
         {
-            return RedirectToAction("Index", "Home");
+            // Refresh the security principal to reflect changes
+            await _signInManager.RefreshSignInAsync(user);
+            TempData["SuccessMessage"] = "Profile updated successfully!";
+            return RedirectToAction("Profile");
         }
 
         foreach (var error in result.Errors)
@@ -157,6 +164,26 @@ namespace CinemaTicketSystem.Controllers
         }
 
         return View(model);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Bookings()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var bookings = await _context.Bookings
+            .Where(b => b.UserId == user.Id)
+            .Include(b => b.Screening)
+            .ThenInclude(s => s!.Movie)
+            .Include(b => b.Seats)
+            .OrderByDescending(b => b.BookingDate)
+            .ToListAsync();
+
+        return View(bookings);
     }
     }
 }

@@ -12,11 +12,7 @@ builder.Services.AddControllersWithViews();
 // Configure database connection
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString,
-        sqlServerOptionsAction: sqlOptions =>
-        {
-            sqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
-        }));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -126,7 +122,7 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
             }
         }
 
-        // Seed sample movies
+        // Sample movies
         if (!context.Movies.Any())
         {
             var movies = new List<Movie>
@@ -137,8 +133,7 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
                     Description = "A thrilling sci-fi adventure about time travel and parallel universes.",
                     Genre = "Science Fiction",
                     DurationMinutes = 148,
-                    ReleaseDate = new DateTime(2024, 11, 1),
-                    PosterUrl = "https://via.placeholder.com/300x450?text=Quantum+Paradox"
+                    ReleaseDate = new DateTime(2024, 11, 1)
                 },
                 new Movie
                 {
@@ -146,8 +141,7 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
                     Description = "A romantic drama set in the bustling streets of New York.",
                     Genre = "Romance",
                     DurationMinutes = 125,
-                    ReleaseDate = new DateTime(2024, 10, 15),
-                    PosterUrl = "https://via.placeholder.com/300x450?text=Hearts+in+City"
+                    ReleaseDate = new DateTime(2024, 10, 15)
                 },
                 new Movie
                 {
@@ -155,48 +149,16 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
                     Description = "A gripping mystery where a retired detective must solve one last case.",
                     Genre = "Thriller",
                     DurationMinutes = 130,
-                    ReleaseDate = new DateTime(2024, 11, 8),
-                    PosterUrl = "https://via.placeholder.com/300x450?text=Last+Detective"
+                    ReleaseDate = new DateTime(2024, 11, 8)
                 }
             };
 
             context.Movies.AddRange(movies);
             await context.SaveChangesAsync();
-
-            // Seed sample screenings
-            var movieId = context.Movies.First().Id;
-            var screenings = new List<Screening>
-            {
-                new Screening
-                {
-                    MovieId = movieId,
-                    ScreeningDateTime = DateTime.Now.AddDays(1).AddHours(18),
-                    Theater = "Theater A",
-                    TotalSeats = 120,
-                    AvailableSeats = 120,
-                    TicketPrice = 12.50m
-                },
-                new Screening
-                {
-                    MovieId = movieId,
-                    ScreeningDateTime = DateTime.Now.AddDays(2).AddHours(20),
-                    Theater = "Theater B",
-                    TotalSeats = 100,
-                    AvailableSeats = 100,
-                    TicketPrice = 15.00m
-                }
-            };
-
-            context.Screenings.AddRange(screenings);
-            await context.SaveChangesAsync();
         }
     }
     catch (Exception ex)
     {
-        // Log but don't throw - allow app to run even if seeding fails
         Console.WriteLine($"Seeding error: {ex.Message}");
     }
 }
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");

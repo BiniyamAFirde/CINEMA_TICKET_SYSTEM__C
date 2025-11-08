@@ -9,19 +9,14 @@ namespace CinemaTicketSystem.ViewModels
         [Display(Name = "Movie")]
         public int MovieId { get; set; }
 
+        [Required(ErrorMessage = "Cinema is required")]
+        [Display(Name = "Cinema")]
+        public int CinemaId { get; set; }
+
         [Required(ErrorMessage = "Screening date and time is required")]
         [DataType(DataType.DateTime)]
         [Display(Name = "Screening Date & Time")]
         public DateTime ScreeningDateTime { get; set; }
-
-        [Required(ErrorMessage = "Theater is required")]
-        [StringLength(50)]
-        public string Theater { get; set; } = null!;
-
-        [Required(ErrorMessage = "Total seats is required")]
-        [Range(1, 500, ErrorMessage = "Total seats must be between 1 and 500")]
-        [Display(Name = "Total Seats")]
-        public int TotalSeats { get; set; }
 
         [Required(ErrorMessage = "Ticket price is required")]
         [Range(0.01, 50, ErrorMessage = "Ticket price must be between 0.01 and 50")]
@@ -29,5 +24,6 @@ namespace CinemaTicketSystem.ViewModels
         public decimal TicketPrice { get; set; }
 
         public List<Movie> Movies { get; set; } = new List<Movie>();
+        public List<Cinema> Cinemas { get; set; } = new List<Cinema>();
     }
 }

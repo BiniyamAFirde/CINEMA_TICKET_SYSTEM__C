@@ -22,19 +22,10 @@ namespace CinemaTicketSystem.Models
 
         [Required]
         [Range(1, 500)]
-        public int Duration { get; set; } // in minutes
-
-        [Required]
-        [Range(1, 500)]
         public int DurationMinutes { get; set; } // in minutes
 
-        [Required]
         [StringLength(50)]
-        public string Rating { get; set; } = string.Empty; // e.g., PG-13, R, etc.
-
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
+        public string? Rating { get; set; } // e.g., PG-13, R, etc.
 
         public string? ImageUrl { get; set; }
         

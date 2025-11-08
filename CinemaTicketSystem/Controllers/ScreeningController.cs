@@ -22,7 +22,9 @@ namespace CinemaTicketSystem.Controllers
         {
             var screeningsQuery = _context.Screenings
                 .Include(s => s.Movie)
-                .OrderBy(s => s.ScreeningDateTime).AsQueryable();
+                .Include(s => s.Cinema)
+                .Include(s => s.Seats)
+                .AsQueryable();
 
             if (movieId.HasValue)
             {
@@ -38,7 +40,12 @@ namespace CinemaTicketSystem.Controllers
         public async Task<IActionResult> Create()
         {
             var movies = await _context.Movies.ToListAsync();
-            var model = new ScreeningCreateViewModel { Movies = movies };
+            var cinemas = await _context.Cinemas.ToListAsync();
+            var model = new ScreeningCreateViewModel
+            {
+                Movies = movies,
+                Cinemas = cinemas
+            };
             return View(model);
         }
 
@@ -49,18 +56,41 @@ namespace CinemaTicketSystem.Controllers
             if (!ModelState.IsValid)
             {
                 model.Movies = await _context.Movies.ToListAsync();
+                model.Cinemas = await _context.Cinemas.ToListAsync();
+                return View(model);
+            }
+
+            // Get the cinema to determine seat layout
+            var cinema = await _context.Cinemas.FindAsync(model.CinemaId);
+            if (cinema == null)
+            {
+                ModelState.AddModelError("", "Selected cinema not found.");
+                model.Movies = await _context.Movies.ToListAsync();
+                model.Cinemas = await _context.Cinemas.ToListAsync();
                 return View(model);
             }
 
             var screening = new Screening
             {
                 MovieId = model.MovieId,
+                CinemaId = model.CinemaId,
                 ScreeningDateTime = model.ScreeningDateTime,
-                Theater = model.Theater,
-                TotalSeats = model.TotalSeats,
-                AvailableSeats = model.TotalSeats,
                 TicketPrice = model.TicketPrice
             };
+
+            // Create seats based on cinema's row and seat layout
+            for (int row = 1; row <= cinema.Rows; row++)
+            {
+                for (int seatNumber = 1; seatNumber <= cinema.SeatsPerRow; seatNumber++)
+                {
+                    screening.Seats.Add(new Seat
+                    {
+                        Row = row,
+                        SeatNumber = seatNumber,
+                        Status = SeatStatus.Available
+                    });
+                }
+            }
 
             _context.Screenings.Add(screening);
             await _context.SaveChangesAsync();
@@ -74,6 +104,7 @@ namespace CinemaTicketSystem.Controllers
         {
             var screening = await _context.Screenings
                 .Include(s => s.Movie)
+                .Include(s => s.Cinema)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (screening == null)

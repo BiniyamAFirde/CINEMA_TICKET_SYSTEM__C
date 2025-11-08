@@ -17,15 +17,13 @@ namespace CinemaTicketSystem.Models
         public Movie? Movie { get; set; }
 
         [Required]
+        public int CinemaId { get; set; }
+
+        [ForeignKey("CinemaId")]
+        public Cinema? Cinema { get; set; }
+
+        [Required]
         public DateTime ScreeningDateTime { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Theater { get; set; } = string.Empty;
-
-        [Required]
-        [Range(1, 500)]
-        public int TotalSeats { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -34,5 +32,8 @@ namespace CinemaTicketSystem.Models
         public bool IsActive { get; set; } = true;
 
         public ICollection<Seat> Seats { get; set; } = new List<Seat>();
+
+        public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
     }
 }
