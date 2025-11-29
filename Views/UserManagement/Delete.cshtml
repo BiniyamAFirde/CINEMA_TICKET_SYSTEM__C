@@ -24,6 +24,7 @@
 
                 <form method="post" asp-action="Delete" novalidate style="display:inline;">
                     <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="Version" value="@Model.Version" />
                     <button type="submit" class="btn btn-danger">Confirm Delete</button>
                     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
                 </form>

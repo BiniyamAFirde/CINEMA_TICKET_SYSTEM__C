@@ -93,7 +93,7 @@ namespace CinemaTicketSystem.Controllers
                                 throw new InvalidOperationException("Screening not found.");
                             }
 
-                            // Fetch selected seats
+                            // Fetch selected seats and lock them for update
                             var seatsToBook = await _context.Seats
                                 .Where(s => model.SelectedSeatIds.Contains(s.Id) && s.ScreeningId == model.ScreeningId)
                                 .ToListAsync();
@@ -106,7 +106,7 @@ namespace CinemaTicketSystem.Controllers
 
                             if (seatsToBook.Any(s => s.Status != SeatStatus.Available))
                             {
-                                throw new InvalidOperationException("One or more selected seats are no longer available.");
+                                throw new DbUpdateConcurrencyException("One or more selected seats are no longer available.");
                             }
 
                             var user = await _userManager.GetUserAsync(User);
@@ -137,6 +137,11 @@ namespace CinemaTicketSystem.Controllers
 
                             newBookingId = booking.Id;
                         }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            await transaction.RollbackAsync();
+                            throw; // Re-throw to be caught by the outer catch block
+                        }
                         catch (Exception)
                         {
                             await transaction.RollbackAsync();
@@ -146,6 +151,11 @@ namespace CinemaTicketSystem.Controllers
                 });
 
                 return RedirectToAction("Success", new { id = newBookingId });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError(string.Empty, "The seats you selected were just booked by another user. Please select different seats.");
+                return await RedisplayForm(model);
             }
             catch (InvalidOperationException ex)
             {
@@ -217,7 +227,7 @@ namespace CinemaTicketSystem.Controllers
         [HttpPost]
         [ActionName("Cancel")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CancelConfirmed(int id)
+        public async Task<IActionResult> CancelConfirmed(int id, byte[] version)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -231,8 +241,11 @@ namespace CinemaTicketSystem.Controllers
 
             if (booking == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Booking not found or you are not authorized to cancel it.";
+                return RedirectToAction("Bookings", "Account");
             }
+
+            _context.Entry(booking).Property("Version").OriginalValue = version;
 
             try
             {
@@ -248,6 +261,11 @@ namespace CinemaTicketSystem.Controllers
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = "Booking cancelled successfully. Seats have been released.";
+                return RedirectToAction("Bookings", "Account");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                TempData["ErrorMessage"] = "The booking has been modified by another user. Please refresh and try again.";
                 return RedirectToAction("Bookings", "Account");
             }
             catch (Exception)

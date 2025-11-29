@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CinemaTicketSystem.Models;
 using CinemaTicketSystem.ViewModels;
+using CinemaTicketSystem.Data;
 
 namespace CinemaTicketSystem.Controllers
 {
@@ -11,10 +12,12 @@ namespace CinemaTicketSystem.Controllers
     public class UserManagementController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public UserManagementController(UserManager<ApplicationUser> userManager)
+        public UserManagementController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
         // GET: UserManagement/Index
@@ -46,7 +49,8 @@ namespace CinemaTicketSystem.Controllers
                 LastName = user.LastName,
                 Email = user.Email ?? string.Empty,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
-                DateOfBirth = user.DateOfBirth ?? DateTime.Now
+                DateOfBirth = user.DateOfBirth ?? DateTime.Now,
+                Version = user.Version
             };
 
             return View(model);
@@ -68,28 +72,53 @@ namespace CinemaTicketSystem.Controllers
                 return NotFound();
             }
 
+            _context.Entry(user).Property("Version").OriginalValue = model.Version;
+
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.PhoneNumber = model.PhoneNumber;
             user.DateOfBirth = model.DateOfBirth;
 
-            var result = await _userManager.UpdateAsync(user);
-
-            if (result.Succeeded)
+            try
             {
-                // If updating the current user, refresh their session
-                var currentUser = await _userManager.GetUserAsync(User);
-                if (currentUser?.Id == user.Id)
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
                 {
-                    await _userManager.UpdateSecurityStampAsync(user);
+                    // If updating the current user, refresh their session
+                    var currentUser = await _userManager.GetUserAsync(User);
+                    if (currentUser?.Id == user.Id)
+                    {
+                        await _userManager.UpdateSecurityStampAsync(user);
+                    }
+                    TempData["SuccessMessage"] = "User updated successfully!";
+                    return RedirectToAction("Index");
                 }
-                TempData["SuccessMessage"] = "User updated successfully!";
-                return RedirectToAction("Index");
-            }
 
-            foreach (var error in result.Errors)
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            catch (DbUpdateConcurrencyException ex)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                var entry = ex.Entries.Single();
+                var databaseValues = await entry.GetDatabaseValuesAsync();
+                if (databaseValues == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The user was deleted by another user.");
+                }
+                else
+                {
+                    var databaseUser = (ApplicationUser)databaseValues.ToObject();
+                    ModelState.AddModelError(string.Empty, "The user you are trying to edit has been modified by another user. " +
+                                                            "Your changes have been cancelled. Please review the current values and try again.");
+                    model.FirstName = databaseUser.FirstName;
+                    model.LastName = databaseUser.LastName;
+                    model.PhoneNumber = databaseUser.PhoneNumber;
+                    model.DateOfBirth = databaseUser.DateOfBirth ?? DateTime.Now;
+                    model.Version = databaseUser.Version;
+                }
             }
 
             return View(model);
@@ -116,12 +145,13 @@ namespace CinemaTicketSystem.Controllers
         // POST: UserManagement/Delete/id
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string id, byte[] version)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction("Index");
             }
 
             // Prevent deleting the last admin or yourself
@@ -132,15 +162,24 @@ namespace CinemaTicketSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            var result = await _userManager.DeleteAsync(user);
+            _context.Entry(user).Property("Version").OriginalValue = version;
 
-            if (result.Succeeded)
+            try
             {
-                TempData["SuccessMessage"] = "User deleted successfully!";
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    TempData["SuccessMessage"] = "User deleted successfully!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to delete user.";
+                }
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                TempData["ErrorMessage"] = "Failed to delete user.";
+                TempData["ErrorMessage"] = "The user has been modified by another user. Please refresh and try again.";
             }
 
             return RedirectToAction("Index");

@@ -24,5 +24,7 @@ namespace CinemaTicketSystem.ViewModels
         [DataType(DataType.Date)]
         [Display(Name = "Date of Birth")]
         public DateTime DateOfBirth { get; set; }
+
+        public byte[]? Version { get; set; }
     }
 }
