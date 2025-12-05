@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaTicketSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251204213038_RemoveRowVersionDefaultValue")]
-    partial class RemoveRowVersionDefaultValue
+    [Migration("20251205121942_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,13 +102,13 @@ namespace CinemaTicketSystem.Migrations
                         {
                             Id = "admin-user-id",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "11609ba6-0424-45b9-aae4-d1ea25ff4888",
+                            ConcurrencyStamp = "01771988-62ac-4fb1-b499-2cabb3794826",
                             Email = "admin@cinema.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CINEMA.COM",
                             NormalizedUserName = "ADMIN@CINEMA.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFepM7D2sL41DDRRlmD7WhvG1ZTcJ6Xr4fiKxDgm+v2Vx6gm5HW3RHAuWtHEH8FWig==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJEsiO7LdwXIaDo/nAUfY1DmjBspaau+Us3IY98ieJ9gY+4IZwlcb3juv25EXnHlvg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "STATIC-SECURITY-STAMP-12345",
                             TwoFactorEnabled = false,

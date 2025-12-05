@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema; // Add this line
 using CinemaTicketSystem.Models;
 using CinemaTicketSystem.Validation;
 

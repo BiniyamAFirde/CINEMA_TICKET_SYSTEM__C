@@ -45,6 +45,11 @@ namespace CinemaTicketSystem.Data
                 .HasForeignKey(s => s.BookingId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Seat>()
+                .Property(s => s.RowVersion)
+                .IsConcurrencyToken()
+                .ValueGeneratedOnAddOrUpdate();
+
             // Seed Admin User
             var adminUser = new ApplicationUser
             {

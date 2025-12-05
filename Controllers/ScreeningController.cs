@@ -102,7 +102,12 @@ namespace CinemaTicketSystem.Controllers
             catch (DbUpdateException ex)
             {
                 // Log the exception details
-                ModelState.AddModelError(string.Empty, "An error occurred while saving the screening. Please try again. " + ex.Message);
+                string errorMessage = "An error occurred while saving the screening. Please try again.";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += " Details: " + ex.InnerException.Message;
+                }
+                ModelState.AddModelError(string.Empty, errorMessage);
                 // Re-populate dropdowns before returning the view
                 model.Movies = await _context.Movies.ToListAsync();
                 model.Cinemas = await _context.Cinemas.ToListAsync();

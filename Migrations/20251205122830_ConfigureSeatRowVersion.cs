@@ -5,7 +5,7 @@
 namespace CinemaTicketSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class RemoveRowVersionDefaultValue : Migration
+    public partial class ConfigureSeatRowVersion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace CinemaTicketSystem.Migrations
                 keyColumn: "Id",
                 keyValue: "admin-user-id",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "11609ba6-0424-45b9-aae4-d1ea25ff4888", "AQAAAAIAAYagAAAAEFepM7D2sL41DDRRlmD7WhvG1ZTcJ6Xr4fiKxDgm+v2Vx6gm5HW3RHAuWtHEH8FWig==" });
+                values: new object[] { "f1421c5e-0e4c-406f-b686-74a6b54e8d98", "AQAAAAIAAYagAAAAEPIV7gElQzn65FCb8ZS83Evs6ZzpNBh0H/rXHFVcCza5zL14RhLdcEl5OoI/O0H1gA==" });
         }
 
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace CinemaTicketSystem.Migrations
                 keyColumn: "Id",
                 keyValue: "admin-user-id",
                 columns: new[] { "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "feb3123d-20e2-4c58-a153-6615b7586aa1", "AQAAAAIAAYagAAAAEBZa17qBapArdpr+z9nO3J7abZHqSg+1CQBTXRCU8y3lD8cLoB6HHoPPBnio1F2arw==" });
+                values: new object[] { "01771988-62ac-4fb1-b499-2cabb3794826", "AQAAAAIAAYagAAAAEJEsiO7LdwXIaDo/nAUfY1DmjBspaau+Us3IY98ieJ9gY+4IZwlcb3juv25EXnHlvg==" });
         }
     }
 }

@@ -274,7 +274,7 @@ namespace CinemaTicketSystem.Migrations
                     SeatNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     BookingId = table.Column<int>(type: "INTEGER", nullable: true),
-                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: false)
+                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -301,7 +301,7 @@ namespace CinemaTicketSystem.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-user-id", 0, "feb3123d-20e2-4c58-a153-6615b7586aa1", null, "admin@cinema.com", true, null, null, false, null, "ADMIN@CINEMA.COM", "ADMIN@CINEMA.COM", "AQAAAAIAAYagAAAAEBZa17qBapArdpr+z9nO3J7abZHqSg+1CQBTXRCU8y3lD8cLoB6HHoPPBnio1F2arw==", null, false, "STATIC-SECURITY-STAMP-12345", false, "admin@cinema.com" });
+                values: new object[] { "admin-user-id", 0, "01771988-62ac-4fb1-b499-2cabb3794826", null, "admin@cinema.com", true, null, null, false, null, "ADMIN@CINEMA.COM", "ADMIN@CINEMA.COM", "AQAAAAIAAYagAAAAEJEsiO7LdwXIaDo/nAUfY1DmjBspaau+Us3IY98ieJ9gY+4IZwlcb3juv25EXnHlvg==", null, false, "STATIC-SECURITY-STAMP-12345", false, "admin@cinema.com" });
 
             migrationBuilder.InsertData(
                 table: "Cinemas",
