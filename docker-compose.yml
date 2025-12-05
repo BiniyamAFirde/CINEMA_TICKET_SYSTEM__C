@@ -18,5 +18,17 @@ services:
       timeout: 20s
       retries: 10
 
+  cinematicketsystem:
+    build: .
+    ports:
+      - "80:8080" # Map host port 80 to container port 8080
+      - "443:8081" # Map host port 443 to container port 8081 for HTTPS
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=CinemaDb;Uid=cinema_user;Pwd=cinema_pass123;"
+
 volumes:
   mysql_data:

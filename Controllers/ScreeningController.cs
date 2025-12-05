@@ -93,10 +93,29 @@ namespace CinemaTicketSystem.Controllers
             }
 
             _context.Screenings.Add(screening);
-            await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "Screening created successfully.";
-            return RedirectToAction("Index");
+            try
+            {
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Screening created successfully.";
+                return RedirectToAction("Index");
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log the exception details
+                ModelState.AddModelError(string.Empty, "An error occurred while saving the screening. Please try again. " + ex.Message);
+                // Re-populate dropdowns before returning the view
+                model.Movies = await _context.Movies.ToListAsync();
+                model.Cinemas = await _context.Cinemas.ToListAsync();
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again. " + ex.Message);
+                // Re-populate dropdowns before returning the view
+                model.Movies = await _context.Movies.ToListAsync();
+                model.Cinemas = await _context.Cinemas.ToListAsync();
+                return View(model);
+            }
         }
 
         [HttpGet]

@@ -12,11 +12,13 @@ namespace CinemaTicketSystem.Controllers
     public class UserManagementController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
 
-        public UserManagementController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public UserManagementController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _context = context;
         }
 
@@ -42,6 +44,9 @@ namespace CinemaTicketSystem.Controllers
                 return NotFound();
             }
 
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var allRoles = await _roleManager.Roles.ToListAsync();
+
             var model = new ProfileEditViewModel
             {
                 Id = user.Id,
@@ -50,7 +55,13 @@ namespace CinemaTicketSystem.Controllers
                 Email = user.Email ?? string.Empty,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 DateOfBirth = user.DateOfBirth ?? DateTime.Now,
-                Version = user.Version
+                Version = user.Version,
+                Roles = userRoles.ToList(),
+                AvailableRoles = allRoles.Select(r => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Text = r.Name,
+                    Value = r.Name
+                }).ToList()
             };
 
             return View(model);
@@ -85,6 +96,15 @@ namespace CinemaTicketSystem.Controllers
 
                 if (result.Succeeded)
                 {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var newRoles = model.Roles ?? new List<string>();
+
+                    var rolesToAdd = newRoles.Except(userRoles);
+                    var rolesToRemove = userRoles.Except(newRoles);
+
+                    await _userManager.AddToRolesAsync(user, rolesToAdd);
+                    await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+
                     // If updating the current user, refresh their session
                     var currentUser = await _userManager.GetUserAsync(User);
                     if (currentUser?.Id == user.Id)
@@ -183,6 +203,46 @@ namespace CinemaTicketSystem.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        // GET: UserManagement/AddUser
+        [HttpGet]
+        public IActionResult AddUser()
+        {
+            return View();
+        }
+
+        // POST: UserManagement/AddUser
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddUser(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser 
+                { 
+                    UserName = model.Email, 
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    DateOfBirth = model.DateOfBirth
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, model.Role);
+                    TempData["SuccessMessage"] = "User added successfully!";
+                    return RedirectToAction("Index");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
         }
     }
 }

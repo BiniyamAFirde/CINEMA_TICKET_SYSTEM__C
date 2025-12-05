@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Configure database connection
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseSqlite("Data Source=cinema.db"));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -129,7 +129,7 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
             {
                 new Movie
                 {
-                    Title = "The Quantum Paradox",
+                    Title = "One of Them Days",
                     Description = "A thrilling sci-fi adventure about time travel and parallel universes.",
                     Genre = "Science Fiction",
                     DurationMinutes = 148,
@@ -137,7 +137,7 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
                 },
                 new Movie
                 {
-                    Title = "Hearts in the City",
+                    Title = "Kill the Jockey",
                     Description = "A romantic drama set in the bustling streets of New York.",
                     Genre = "Romance",
                     DurationMinutes = 125,
@@ -145,11 +145,43 @@ async Task SeedData(ApplicationDbContext context, UserManager<ApplicationUser> u
                 },
                 new Movie
                 {
-                    Title = "The Last Detective",
+                    Title = "The Mastermind",
                     Description = "A gripping mystery where a retired detective must solve one last case.",
                     Genre = "Thriller",
                     DurationMinutes = 130,
                     ReleaseDate = new DateTime(2024, 11, 8)
+                },
+                new Movie
+                {
+                    Title = "Sinners",
+                    Description = "A historical epic about the rise and fall of an empire.",
+                    Genre = "History",
+                    DurationMinutes = 180,
+                    ReleaseDate = new DateTime(2024, 9, 20)
+                },
+                new Movie
+                {
+                    Title = "Roofman",
+                    Description = "A heartwarming animated tale for the whole family.",
+                    Genre = "Animation",
+                    DurationMinutes = 95,
+                    ReleaseDate = new DateTime(2024, 12, 25)
+                },
+                new Movie
+                {
+                    Title = "Peter Hujar's Day",
+                    Description = "A mind-bending psychological thriller.",
+                    Genre = "Thriller",
+                    DurationMinutes = 118,
+                    ReleaseDate = new DateTime(2024, 10, 5)
+                },
+                new Movie
+                {
+                    Title = "Sentimental Value",
+                    Description = "An inspiring story of a musician's journey to fame.",
+                    Genre = "Musical",
+                    DurationMinutes = 140,
+                    ReleaseDate = new DateTime(2024, 11, 22)
                 }
             };
 

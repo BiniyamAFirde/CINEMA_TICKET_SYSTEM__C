@@ -36,6 +36,6 @@ namespace CinemaTicketSystem.Models
         public Booking? Booking { get; set; }
 
         [Timestamp]
-        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+        public byte[] RowVersion { get; set; }
     }
 }

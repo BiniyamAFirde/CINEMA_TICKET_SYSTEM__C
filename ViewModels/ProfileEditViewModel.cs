@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CinemaTicketSystem.ViewModels
 {
@@ -26,5 +27,9 @@ namespace CinemaTicketSystem.ViewModels
         public DateTime DateOfBirth { get; set; }
 
         public byte[]? Version { get; set; }
+
+        public List<string> Roles { get; set; } = new List<string>();
+
+        public List<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
     }
 }
