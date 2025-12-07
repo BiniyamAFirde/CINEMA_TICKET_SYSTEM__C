@@ -1,4 +1,4 @@
-﻿using CinemaTicketSystem.Models;
+using CinemaTicketSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,16 +29,19 @@ namespace CinemaTicketSystem.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure Booking entity
             modelBuilder.Entity<Booking>()
                 .Property(b => b.TotalPrice)
                 .HasColumnType("decimal(18,2)");
 
+            // Fix the relationship: Booking -> Screening (many-to-one)
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Screening)
-                .WithMany()
+                .WithMany(s => s.Bookings)
                 .HasForeignKey(b => b.ScreeningId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Configure Seat relationships
             modelBuilder.Entity<Seat>()
                 .HasOne(s => s.Booking)
                 .WithMany(b => b.Seats)
@@ -59,7 +62,7 @@ namespace CinemaTicketSystem.Data
                 Email = "admin@cinema.com",
                 NormalizedEmail = "ADMIN@CINEMA.COM",
                 EmailConfirmed = true,
-                SecurityStamp = "STATIC-SECURITY-STAMP-12345" // Use a static value instead of Guid.NewGuid()
+                SecurityStamp = "STATIC-SECURITY-STAMP-12345"
             };
 
             var passwordHasher = new PasswordHasher<ApplicationUser>();
@@ -86,7 +89,7 @@ namespace CinemaTicketSystem.Data
                 }
             );
 
-            // Seed Cinemas (fixed list as per requirements)
+            // Seed Cinemas
             modelBuilder.Entity<Cinema>().HasData(
                 new Cinema
                 {

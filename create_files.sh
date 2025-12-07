@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# Create UserManagementController.cs
+cat > Controllers/UserManagementController.cs << 'CONTROLLER'
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +42,7 @@ namespace CinemaTicketSystem.Controllers
                 return NotFound();
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -55,7 +59,6 @@ namespace CinemaTicketSystem.Controllers
                 Email = user.Email ?? string.Empty,
                 PhoneNumber = user.PhoneNumber ?? string.Empty,
                 DateOfBirth = user.DateOfBirth ?? DateTime.Now,
-                RowVersion = string.IsNullOrEmpty(user.ConcurrencyStamp) ? null : System.Text.Encoding.UTF8.GetBytes(user.ConcurrencyStamp),
                 Roles = userRoles.ToList(),
                 AvailableRoles = allRoles.Select(r => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
                 {
@@ -75,7 +78,6 @@ namespace CinemaTicketSystem.Controllers
             // Ensure the ID matches
             if (id != model.Id)
             {
-                TempData["ErrorMessage"] = "User ID mismatch.";
                 return NotFound();
             }
 
@@ -91,31 +93,13 @@ namespace CinemaTicketSystem.Controllers
                     Text = r.Name,
                     Value = r.Name
                 }).ToList();
-                
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                foreach (var error in errors)
-                {
-                    TempData["ErrorMessage"] = error.ErrorMessage;
-                }
-                
                 return View(model);
             }
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == model.Id);
+            var user = await _userManager.FindByIdAsync(model.Id);
             if (user == null)
             {
                 return NotFound();
-            }
-
-            // Check concurrency - if RowVersion doesn't match, another admin has modified this user
-            if (model.RowVersion != null)
-            {
-                var currentRowVersion = string.IsNullOrEmpty(user.ConcurrencyStamp) ? null : System.Text.Encoding.UTF8.GetBytes(user.ConcurrencyStamp);
-                if (!AreByteArraysEqual(model.RowVersion, currentRowVersion))
-                {
-                    TempData["ErrorMessage"] = "This user was modified by another administrator. Please refresh and try again.";
-                    return RedirectToAction("Edit", new { id = model.Id });
-                }
             }
 
             // Update user properties
@@ -265,20 +249,126 @@ namespace CinemaTicketSystem.Controllers
 
             return View(model);
         }
-
-        // Helper method to compare byte arrays for concurrency check
-        private bool AreByteArraysEqual(byte[]? array1, byte[]? array2)
-        {
-            if (array1 == null && array2 == null) return true;
-            if (array1 == null || array2 == null) return false;
-            if (array1.Length != array2.Length) return false;
-
-            for (int i = 0; i < array1.Length; i++)
-            {
-                if (array1[i] != array2[i]) return false;
-            }
-
-            return true;
-        }
     }
 }
+CONTROLLER
+
+# Create ProfileEditViewModel.cs
+cat > ViewModels/ProfileEditViewModel.cs << 'VIEWMODEL'
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace CinemaTicketSystem.ViewModels
+{
+    public class ProfileEditViewModel
+    {
+        public string Id { get; set; } = null!;
+
+        [Required(ErrorMessage = "First name is required")]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Last name is required")]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = string.Empty;
+
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; } = string.Empty;
+
+        [Phone(ErrorMessage = "Invalid phone number")]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Date of Birth")]
+        public DateTime DateOfBirth { get; set; }
+
+        public List<string> Roles { get; set; } = new List<string>();
+
+        public List<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
+    }
+}
+VIEWMODEL
+
+# Create Edit.cshtml
+cat > Views/UserManagement/Edit.cshtml << 'VIEW'
+@model CinemaTicketSystem.ViewModels.ProfileEditViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Edit User</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="FirstName" class="form-label"></label>
+                        <input asp-for="FirstName" class="form-control" required />
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="LastName" class="form-label"></label>
+                        <input asp-for="LastName" class="form-control" required />
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" type="email" class="form-control" disabled />
+                        <small class="text-muted">Email cannot be changed</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label"></label>
+                        <input asp-for="PhoneNumber" type="tel" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="DateOfBirth" class="form-label"></label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">User Roles</label>
+                        @foreach (var role in Model.AvailableRoles)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox" 
+                                       class="form-check-input" 
+                                       name="Roles" 
+                                       value="@role.Value" 
+                                       id="role_@role.Value"
+                                       @(Model.Roles.Contains(role.Value ?? "") ? "checked" : "") />
+                                <label class="form-check-label" for="role_@role.Value">
+                                    @role.Text
+                                </label>
+                            </div>
+                        }
+                        <span asp-validation-for="Roles" class="text-danger small"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                    <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+VIEW
+
+echo "Files created successfully!"
