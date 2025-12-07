@@ -1,263 +1,618 @@
-# Cinema Ticket Booking System
+🎬 Cinema Ticket System
+A modern, full-featured cinema ticket booking system built with ASP.NET Core MVC, designed for seamless movie ticket management and booking experiences.
 
-A web-based cinema ticket reservation system built with ASP.NET Core MVC, enabling users to browse screenings, reserve seats in real-time, and manage bookings with administrative controls.
+📋 Project Information
+Course: Graphical User Interfaces (EGUI)
+Academic Year: 2024-2025
+Institution: Warsaw University of Technology
+Faculty: Faculty of Electronics and Information Technology
+Student: Biniyam Firde
+Repository: GitLab Project
 
-## Project Information
 
-**Course:** Graphical User Interface (EGUI)  
-**Academic Year:** 2025-2026  
-**Institution:** Warsaw University of Technology  
-**Faculty:** Faculty of Electronics and Information Technology  
-**Student:** Yonatan Firde  
-**Project Repository:** [GitLab Repository](https://gitlab-stud.elka.pw.edu.pl/25z-egui/mvc/25Z-EGUI-MVC-Firde-Yonatan.git)
+🛠️ Technology Stack
 
-## Technology Stack
 
-![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=flat-square&logo=.net&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-5.7.24-4479A1?style=flat-square&logo=mysql&logoColor=white)
-![Entity Framework](https://img.shields.io/badge/Entity%20Framework-Core-512BD4?style=flat-square)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat-square&logo=bootstrap&logoColor=white)
 
-## System Architecture
 
-- **Framework:** ASP.NET Core 9.0 MVC
-- **ORM:** Entity Framework Core
-- **Authentication:** ASP.NET Core Identity
-- **Database:** MySQL 5.7.24
-- **HTML5** with Razor syntax
-- **CSS3** with Bootstrap 5.3
 
-## Features
 
-### User Functionalities
-- **Account Management:** User registration, login, and profile management
-- **Screening Browser:** View available movie screenings with real-time seat availability
-- **Seat Selection:** Interactive seat map interface
-- **Booking Management:** Create, view, and cancel reservations
-- **Booking History:** Track all past and upcoming bookings
 
-### Administrative Functionalities
-- **Screening Management:** Create, edit, and delete movie screenings
-- **Cinema Management:** Manage cinema halls and seating configurations
-- **User Management:** View and manage user accounts
-- **Role-Based Access Control:** Separate permissions for users and administrators
+Core Technologies
 
-## Project Structure
-```
-CinemaTicketSystem/
-├── Controllers/              # MVC Controllers
-│   ├── AccountController.cs
-│   ├── BookingController.cs
-│   ├── HomeController.cs
-│   ├── MovieController.cs
-│   ├── ScreeningController.cs
-│   └── UserManagementController.cs
-├── Models/                   # Domain models
-│   ├── ApplicationUser.cs
-│   ├── Booking.cs
-│   ├── Cinema.cs
-│   ├── ErrorViewModel.cs
-│   ├── Movie.cs
-│   ├── Screening.cs
-│   ├── Seat.cs
-│   └── Ticket.cs
-├── ViewModels/              # View-specific models
-│   ├── BookingViewModel.cs
-│   ├── LoginViewModel.cs
-│   ├── ProfileEditViewModel.cs
-│   ├── ProfileViewModel.cs
-│   ├── RegisterViewModel.cs
-│   └── ScreeningCreateViewModel.cs
-├── Views/                   # Razor views
-│   ├── Account/
-│   ├── Admin/
-│   ├── Booking/
-│   ├── Home/
-│   ├── Movie/
-│   ├── Screening/
-│   ├── Shared/
-│   └── UserManagement/
-├── Data/                    # Database context
-│   ├── ApplicationDbContext.cs
-│   └── Migrations/
-├── wwwroot/                 # Static resources
-│   ├── css/
-│   ├── js/
-│   └── lib/
-├── Properties/
-│   └── launchSettings.json
-├── appsettings.json         # Application configuration
-├── Program.cs               # Application entry point
-└── README.md
-```
 
-## Installation and Setup
+Backend: ASP.NET Core 9.0 MVC
 
-### Prerequisites
-- **.NET SDK 9.0** or higher
-- **MySQL Server 5.7.24** or higher
-- **Visual Studio 2022** or **Visual Studio Code**
-- **Git**
+ORM: Entity Framework Core 9.0
 
-### Step 1: Clone the Repository
-```bash
-git clone https://gitlab-stud.elka.pw.edu.pl/25z-egui/mvc/25Z-EGUI-MVC-Firde-Yonatan.git
-cd CinemaTicketSystem
-```
+Database: MySQL 8.0
 
-### Step 2: Database Configuration
+Authentication: ASP.NET Core Identity
 
-#### Create MySQL Database
-```bash
-mysql -u root -p
-```
-```sql
-CREATE DATABASE CinemaDb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'cinema_user'@'localhost' IDENTIFIED BY 'cinema_pass123';
-GRANT ALL PRIVILEGES ON CinemaDb.* TO 'cinema_user'@'localhost';
+Frontend: Bootstrap 5.3, HTML5, CSS3, JavaScript
+
+Containerization: Docker & Docker Compose
+
+Version Control: Git
+
+
+
+✨ Features
+
+🎭 User Features
+
+
+🔐 Account Management: User registration, login, and profile management
+
+🎥 Browse Movies: View latest movies with detailed information
+🎞️ View Screenings: Browse available screenings by movie and cinema
+
+💺 Interactive Seat Selection: Real-time seat map interface
+
+📅 Book Tickets: Reserve multiple seats for screenings
+
+📋 Booking History: View and manage all personal bookings
+
+❌ Cancel Bookings: Cancel reservations with automatic seat release
+
+
+👨‍💼 Administrator Features
+
+
+🎬 Movie Management: Add, edit, and delete movies
+
+🏛️ Cinema Management: Manage cinema halls and seating configurations
+
+📅 Screening Management: Create, edit, and delete screenings
+
+👥 User Management: View and manage user accounts and roles
+
+📊 System Monitoring: View all bookings and screenings
+
+
+🔧 Technical Features
+
+
+🔐 Secure authentication with ASP.NET Core Identity
+
+🔄 Concurrency control to prevent double bookings
+
+🎨 Responsive design with modern UI
+
+🐳 Docker containerization for easy deployment
+
+🗄️ MySQL database with Entity Framework Core
+
+⚡ Real-time seat availability updates
+
+
+
+📦 Prerequisites
+Before running this project, ensure you have:
+
+
+.NET 9.0 SDK or later
+Docker Desktop
+Docker Compose
+Git
+
+
+
+🚀 Installation & Setup
+
+Option 1: Using Docker (Recommended)
+1. Clone the Repository
+
+git clone https://gitlab-stud.elka.pw.edu.pl/25z-egui/mvc/25Z-EGUI-MVC-Firde-Biniyam.git
+cd 25Z-EGUI-MVC-Firde-Biniyam
+
+
+2. Start with Docker Compose
+
+docker-compose up --build -d
+
+
+3. Access the Application
+
+Open browser: http://localhost or http://localhost:80
+
+Application automatically creates database and seeds initial data
+
+4. Stop the Application
+
+docker-compose down
+
+
+5. Reset Database (Optional)
+
+docker-compose down -v
+docker-compose up --build -d
+
+
+
+
+Option 2: Local Development
+1. Clone the Repository
+
+git clone https://gitlab-stud.elka.pw.edu.pl/25z-egui/mvc/25Z-EGUI-MVC-Firde-Biniyam.git
+cd 25Z-EGUI-MVC-Firde-Biniyam
+
+
+2. Configure MySQL Database
+Create database:
+
+CREATE DATABASE CinemaTicketSystem CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'cinema_user'@'localhost' IDENTIFIED BY 'cinema_pass';
+GRANT ALL PRIVILEGES ON CinemaTicketSystem.* TO 'cinema_user'@'localhost';
 FLUSH PRIVILEGES;
-EXIT;
-```
 
-#### Configure Connection String
-Edit `appsettings.json`:
-```json
+
+3. Update Connection String
+Edit appsettings.json:
+
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Port=3306;Database=CinemaDb;Uid=cinema_user;Pwd=cinema_pass123;"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.EntityFrameworkCore": "Information"
-    }
-  },
-  "AllowedHosts": "*"
+    "DefaultConnection": "Server=localhost;Port=3306;Database=CinemaTicketSystem;Uid=cinema_user;Pwd=cinema_pass;"
+  }
 }
-```
 
-### Step 3: Install Dependencies and Run Migrations
-```bash
-# Restore NuGet packages
+
+4. Install Dependencies
+
 dotnet restore
 
-# Apply database migrations
+
+5. Apply Migrations
+
 dotnet ef database update
 
-# Run the application
+
+6. Run Application
+
 dotnet run
-```
 
-### Step 4: Access the Application
-- **Application URL:** `https://localhost:5087` or `http://localhost:5087`
-- **Default Admin Credentials:**
-  - Email: `admin@cinema.com`
-  - Password: `Admin@123`
 
-## Database Schema
+7. Access Application
 
-### Core Tables
-- **AspNetUsers:** User accounts and authentication
-- **AspNetRoles:** User roles (Admin, User)
-- **Cinemas:** Cinema hall information
-- **Movies:** Movie details
-- **Screenings:** Movie screening schedules
-- **Seats:** Seating configuration per cinema
-- **Bookings:** User reservations
-- **Tickets:** Individual tickets per booking
+Navigate to: http://localhost:5087
 
-### Entity Relationships
-- Cinema **1:N** Screening
-- Movie **1:N** Screening
-- Screening **1:N** Booking
-- User **1:N** Booking
-- Booking **1:N** Ticket
-- Seat **1:N** Ticket
 
-## Usage Guide
 
-### For Users
 
-#### 1. Registration
-- Navigate to the registration page
-- Provide email, password, full name, and phone number
-- Submit to create account
+💻 Usage Guide
 
-#### 2. Browse Screenings
-- Access "Screenings" from navigation menu
-- View available movies with dates and times
-- Check real-time seat availability
+🔑 Default Admin Credentials
+Email: admin@cinema.com
+Password: Admin@123
+⚠️ Important: Change admin password after first login in production!
 
-#### 3. Book Tickets
-- Select desired screening
-- Choose seats from interactive seat map
-- Confirm booking details
-- View confirmation in "My Bookings"
 
-#### 4. Manage Bookings
-- Access "My Bookings" page
-- View all active and past reservations
-- Cancel bookings if necessary
+For Regular Users
+1. Register/Login
 
-### For Administrators
+Click "Register" to create account
+Provide email, password, and personal details
+Login with credentials
 
-#### 1. Access Admin Panel
-- Login with administrative credentials
-- Navigate to Admin Panel from menu
+2. Browse Movies
 
-#### 2. Create Screening
-- Select "Create Screening"
-- Choose cinema hall
-- Enter movie title
-- Set date and time
-- Submit to create
+View latest movies on homepage
+Click "Details" for movie information
+Click "View Screenings" for showtimes
 
-#### 3. Manage System
-- View all screenings and bookings
-- Edit or delete screenings
-- Manage user accounts and roles
-- Monitor system activity
+3. Book Tickets
 
-## Future Enhancements
-- Implementation of reservation/cancellation of seat reservation at a screening
-- Conflict handling (reservation of the same seat by several concurrent users)
-- Implementation of displaying occupied seats at a selected screening
-- Added parallelism when editing a user/deleting a user
-## Troubleshooting
+Select screening
+Choose seats on interactive map
+Green = Available, Red = Booked, Blue = Your Selection
+Confirm booking
+View confirmation details
 
-### Database Connection Issues
-```bash
-# Test MySQL connection
-mysql -u cinema_user -p -h localhost CinemaDb
+4. Manage Bookings
 
-# Reset database if needed
-dotnet ef database drop --force
-dotnet ef database update
-```
+Navigate to "My Bookings" in user menu
+View all reservations
+Cancel bookings if needed
 
-### Port Already in Use
-Edit `Properties/launchSettings.json` to change the port number.
 
-### Migration Errors
-```bash
-# Remove all migrations
+
+For Administrators
+1. Access Admin Panel
+
+Login with admin credentials
+Access admin features from navigation menu
+
+2. Manage Movies
+
+Add new movies with details (title, genre, duration, etc.)
+Edit existing movies
+Delete movies
+
+3. Manage Screenings
+
+Create screenings for movies
+Set date, time, cinema, and ticket price
+Edit or delete screenings
+
+4. Manage Users
+
+View all registered users
+Assign/remove admin roles
+Delete user accounts
+
+
+
+📁 Project Structure
+
+Cinema_Ticket_System/
+├── Controllers/                    # MVC Controllers
+│   ├── HomeController.cs          # Homepage and movie listing
+│   ├── AccountController.cs       # User authentication
+│   ├── BookingController.cs       # Ticket booking logic
+│   ├── ScreeningController.cs     # Screening management
+│   └── UserManagementController.cs # Admin user management
+│
+├── Models/                        # Data Models
+│   ├── Movie.cs                   # Movie entity
+│   ├── Cinema.cs                  # Cinema hall entity
+│   ├── Screening.cs               # Screening entity
+│   ├── Booking.cs                 # Booking entity
+│   ├── Seat.cs                    # Seat entity
+│   └── ApplicationUser.cs         # User entity
+│
+├── ViewModels/                    # View Models
+│   ├── BookingViewModel.cs
+│   ├── LoginViewModel.cs
+│   ├── RegisterViewModel.cs
+│   └── ScreeningCreateViewModel.cs
+│
+├── Views/                         # Razor Views
+│   ├── Home/                      # Homepage views
+│   ├── Account/                   # Login/Register views
+│   ├── Booking/                   # Booking views
+│   ├── Screening/                 # Screening views
+│   └── Shared/                    # Layout and shared views
+│       └── _Layout.cshtml         # Main layout
+│
+├── Data/                          # Database Context
+│   └── ApplicationDbContext.cs    # EF Core DbContext
+│
+├── Migrations/                    # EF Core Migrations
+│   └── [Timestamp]_InitialCreate.cs
+│
+├── wwwroot/                       # Static Files
+│   ├── css/
+│   │   ├── site.css              # Custom styles
+│   │   └── _Layout.cshtml.css    # Layout-specific styles
+│   ├── js/
+│   └── lib/
+│
+├── Properties/
+│   └── launchSettings.json        # Launch configuration
+│
+├── docker-compose.yml             # Docker configuration
+├── Dockerfile                     # Docker image definition
+├── appsettings.json              # Application settings
+├── Program.cs                     # Application entry point
+└── README.md                      # This file
+
+
+
+
+🗄️ Database Schema
+
+Main Tables
+Movies
+
+Stores movie information (title, genre, duration, release date, etc.)
+
+Cinemas
+
+Cinema halls with seating configuration (rows, seats per row)
+
+Screenings
+
+Movie showtimes at specific cinemas with pricing
+
+Bookings
+
+User ticket reservations with total price and status
+
+Seats
+
+Individual seat allocation and booking status
+
+AspNetUsers
+
+User accounts with authentication
+
+AspNetRoles
+
+User roles (Admin, User)
+
+
+Pre-seeded Data
+7 Sample Movies:
+
+Mission: Impossible - The Final Reckoning
+Superman
+Sinners
+Ballerina
+F1: The Movie
+How to Train Your Dragon
+Jurassic World: Rebirth
+
+4 Cinema Halls:
+
+Grand Cinema Hall (10 rows × 15 seats)
+Cozy Theater (8 rows × 12 seats)
+Premium Auditorium (12 rows × 20 seats)
+Small Screening Room (6 rows × 10 seats)
+
+
+
+🏗️ Architecture: MVC Pattern
+
+Model
+
+Defines data structure and business rules
+Entity Framework Core maps classes to database tables
+Includes validation attributes
+
+
+View
+
+Razor templates (.cshtml files)
+Displays data using @Model
+
+Bootstrap 5 for responsive UI
+Client-side validation
+
+
+Controller
+
+Handles HTTP requests
+Processes business logic
+Interacts with database via EF Core
+Returns views or redirects
+
+Request Flow:
+
+User Request → Routing → Controller → Model (EF Core) → Database
+                              ↓
+                         View Rendering
+                              ↓
+                         HTML Response
+
+
+
+
+🔧 Key Technical Features
+
+1. Entity Framework Core (ORM)
+
+// Get all movies
+var movies = await _context.Movies.ToListAsync();
+
+// Find specific screening
+var screening = await _context.Screenings
+    .Include(s => s.Movie)
+    .Include(s => s.Cinema)
+    .FirstOrDefaultAsync(s => s.Id == id);
+
+// Create booking
+_context.Bookings.Add(newBooking);
+await _context.SaveChangesAsync();
+
+
+
+2. Concurrency Control
+
+Row versioning prevents double bookings
+Optimistic concurrency handling
+Database constraints ensure data integrity
+
+
+3. ASP.NET Core Identity
+
+Secure password hashing
+Role-based authorization
+Session management
+Cookie authentication
+
+
+4. Responsive Design
+
+Bootstrap 5 grid system
+Mobile-friendly interface
+Interactive seat maps
+Real-time updates
+
+
+
+🧪 Testing
+
+User Workflows to Test
+1. User Registration & Authentication
+
+Register new account
+Login with credentials
+Edit profile
+Logout
+
+2. Browse & Book
+
+View movie list
+See screening details
+Select seats
+Confirm booking
+View in "My Bookings"
+
+3. Cancel Bookings
+
+Navigate to "My Bookings"
+Cancel reservation
+Verify seats released
+
+4. Admin Features
+
+Login as admin
+Create movie
+Create screening
+Manage users
+View all bookings
+
+5. Concurrency Testing
+
+Two users book same seat simultaneously
+First booking succeeds
+Second booking fails with error
+
+
+
+🐛 Troubleshooting
+
+Database Connection Issues
+
+# Check MySQL is running
+docker ps
+
+# View MySQL logs
+docker logs cinema_mysql
+
+# Restart containers
+docker-compose restart
+
+
+
+Port Already in Use
+
+# Find process using port
+lsof -i:80
+
+# Kill process
+kill -9 <PID>
+
+# Or change port in docker-compose.yml
+
+
+
+Migration Errors
+
+# Remove last migration
 dotnet ef migrations remove
 
 # Create new migration
-dotnet ef migrations add InitialCreate
+dotnet ef migrations add NewMigration
+
+# Update database
 dotnet ef database update
-```
 
-## References and Resources
-- [ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/)
-- [Entity Framework Core Documentation](https://docs.microsoft.com/en-us/ef/core/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
-- [Bootstrap Documentation](https://getbootstrap.com/docs/)
 
-## License
-This project is developed for academic purposes. All rights reserved © 2025 Yonatan Firde.
 
----
+Reset Everything
 
-**For questions or issues, please contact:** yonatanawlachew1@gmail.com
+# Complete reset
+docker-compose down -v
+docker-compose up --build -d
+
+
+
+
+📚 Course Requirements Completion
+
+✅ Task 1: Basic System (Completed)
+
+
+✓ User registration and authentication
+
+✓ User profile management
+
+✓ Admin account creation
+
+✓ Cinema hall setup (4 pre-configured halls)
+
+✓ Session-based authentication
+
+
+✅ Task 2: Advanced Features (Completed)
+
+
+✓ Create/Edit/Delete screenings
+
+✓ Interactive seat map visualization
+
+✓ Seat reservation system (row, seat number)
+
+✓ Cancel/release reservations
+
+✓ Conflict prevention (database constraints)
+
+✓ Display occupied seats in real-time
+
+✓ Concurrency handling with row versioning
+
+
+
+🚀 Future Enhancements
+Potential Improvements:
+
+
+□ Payment gateway integration
+
+□ Email confirmation notifications
+
+□ Movie ratings and reviews
+
+□ Advanced search and filters
+
+□ QR code tickets
+
+□ Mobile application
+
+□ Real-time WebSocket updates
+
+□ Multi-language support
+
+□ Analytics dashboard
+
+□ Loyalty program
+
+
+
+📖 References
+
+ASP.NET Core Documentation
+Entity Framework Core
+MySQL Documentation
+Bootstrap 5 Documentation
+Docker Documentation
+
+
+
+👨‍💻 Author
+Biniyam Firde
+Warsaw University of Technology
+Faculty of Electronics and Information Technology
+Academic Year: 2024-2025
+Contact: 01205432@pw.edu.pl
+GitLab: @25Z-EGUI-MVC-Firde-Biniyam
+
+
+📄 License
+This project is developed for educational purposes as part of the EGUI course at Warsaw University of Technology.
+MIT License - Open source and available for educational use.
+
+
+🙏 Acknowledgments
+
+Warsaw University of Technology
+EGUI Course Instructors
+ASP.NET Core Community
+Bootstrap Framework Team
+
+
+Project Status: ✅ Complete - All required features implemented and tested.
+Last Updated: December 2024
+
+For questions or issues, please create an issue on GitLab or contact the author.
